@@ -1,3 +1,8 @@
+let mode = 0;
+
+
+
+
 function init() {
   let mouse = {
     click: false,
@@ -11,7 +16,7 @@ function init() {
   let width = window.innerWidth;
   let height = window.innerHeight;
   let color = "#101010";
-  let mode = 0;
+  
   canvas.width = width;
   canvas.height = height;
 
@@ -44,8 +49,8 @@ function init() {
     context.beginPath();
     context.lineWidth = 4;
     context.strokeStyle   = color;
-    context.moveTo(line[0].x * width, line[0].y * height);
-    context.lineTo(line[1].x * width, line[1].y * height);
+    context.moveTo(line[0].x * width, line[0].y * height-24);
+    context.lineTo(line[1].x * width, line[1].y * height-24);
     context.stroke();
   }
 
