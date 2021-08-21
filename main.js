@@ -1,6 +1,9 @@
 let mode = 0;
 
-
+function changeMode(element){
+  console.log(element.id);
+  mode = element.id;
+}
 
 
 function init() {
@@ -22,27 +25,36 @@ function init() {
 
   canvas.addEventListener("mousedown", (e) => {
     mouse.click = true;
+    mouse.pos_prev = {x:e.clientX / width, y: e.clientY / height}
     if(e.button == 2)
     {
         color = "#ffffff";
         mode = 1;
     }
-    else{
+    else if(e.button == 0){
         color = "#101010";
-        mode = 0;
     }
-    console.log(e);
   });
 
   canvas.addEventListener("mouseup", (e) => {
     mouse.click = false;
-    e.preventDefault();
   });
 
   canvas.addEventListener("mousemove", (e) => {
-    mouse.pos.x = e.clientX / width;
-    mouse.pos.y = e.clientY / height;
-    mouse.move = true;
+    if(mode == 3)
+    {
+      DrawSquare([mouse.pos, mouse.pos_prev], "white");
+      mouse.pos.x = e.clientX / width;
+      mouse.pos.y = e.clientY / height;
+      mouse.move = true;
+      DrawSquare([mouse.pos, mouse.pos_prev], "black");
+    }
+    else{
+      mouse.pos.x = e.clientX / width;
+      mouse.pos.y = e.clientY / height;
+      mouse.move = true;
+    }
+    
   });
 
   function DrawLine(line) {
@@ -55,9 +67,9 @@ function init() {
   }
 
 
-  function DrawCircle(line){
+  function DrawCircle(line, radio){
     context.beginPath();
-    context.arc(line[0].x * width, line[0].y * height, 20, 0, 2 * Math.PI, false);
+    context.arc(line[0].x * width, line[0].y * height-30, radio, 0, 2 * Math.PI, false);
     context.fillStyle = color;
     context.fill();
     context.lineWidth = 2;
@@ -65,19 +77,38 @@ function init() {
     context.stroke();
   }
 
+
+  function DrawSquare(line, c){
+    context.beginPath();
+    context.lineWidth = 4;
+    context.strokeStyle   = c;
+    context.moveTo(line[1].x * width, line[1].y * height-24);
+    context.lineTo(line[0].x * width, line[0].y * height-24);
+    context.stroke();
+  }
+
+
+
+
+
+
+
   function mainLoop() {
     if (mouse.click && mouse.move && mouse.pos_prev) {
-        if(mode == 0)
-        {
-            DrawLine([mouse.pos, mouse.pos_prev]);
-        }
-        else{
-            DrawCircle([mouse.pos, mouse.pos_prev])
-        }
-        
-        mouse.move = false;
+        console.log(mode);
+          if(mode == 0)
+          {
+              DrawCircle([mouse.pos, mouse.pos_prev],4);
+          }
+          else if(mode == 1){
+              DrawCircle([mouse.pos, mouse.pos_prev], 20);
+          }
+          
+          
+          mouse.move = false;
     }
-    mouse.pos_prev = { x: mouse.pos.x, y: mouse.pos.y };
+    
+    
     setTimeout(mainLoop, 25);
   }
 
