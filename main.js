@@ -1,4 +1,4 @@
-let mode = 0;
+
 
 function changeMode(element) {
   console.log(element.id);
@@ -7,54 +7,56 @@ function changeMode(element) {
 
 function init() {
   let mouse = {
-    click: false,
-    mode: false,
+    drawing: false,
+    click:false,
     pos: { x: 0, y: 0 },
-    pos_prev: false,
   };
 
   let canvas = document.getElementById("canvas");
   let context = canvas.getContext("2d");
   let width = window.innerWidth;
   let height = window.innerHeight;
-  let color = "#101010";
 
   canvas.width = width;
   canvas.height = height;
 
   canvas.addEventListener("mousedown", (e) => {
+    mouse.drawing = true;
     mouse.click = true;
-    mouse.pos_prev = { x: e.clientX / width, y: e.clientY / height };
+    mouse.pos.x = e.clientX;
+    mouse.pos.y = e.clientY;
   });
 
   canvas.addEventListener("mouseup", (e) => {
+    mouse.drawing = false;
     mouse.click = false;
-    console.log('solto');
   });
 
   canvas.addEventListener("mousemove", (e) => {
-    mouse.pos.x = e.clientX / width;
-    mouse.pos.y = e.clientY / height;
-    mouse.move = true;
+    mouse.pos.x = e.clientX;
+    mouse.pos.y = e.clientY;
+    if(mouse.click)mouse.drawing = true;
   });
 
-  function DrawLine(line) {
+  function Draw(x, y, radius) {
     context.beginPath();
-    context.lineWidth = 4;
-    context.strokeStyle = color;
-    context.moveTo(line[0].x * width, line[0].y * height - 24);
-    context.lineTo(line[1].x * width, line[1].y * height - 24);
+    context.arc(x, y-52, radius, 0, 2 * Math.PI, false);
+    context.fillStyle = 'black';
+    context.fill();
+    context.lineWidth = 2;
+    context.strokeStyle = 'black';
     context.stroke();
+
   }
 
 
   function mainLoop() {
-    if (mouse.click && mouse.move && mouse.pos_prev) {
-      console.log('clickeando');
-      mouse.move = false;
+    if(mouse.drawing){
+      Draw(mouse.pos.x, mouse.pos.y, 3);
+      mouse.drawing = false;
     }
-    setTimeout(mainLoop, 25);
-  }
+    setTimeout(mainLoop, 15);
+  } 
   
   mainLoop();
 }
