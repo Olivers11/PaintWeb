@@ -28,8 +28,14 @@ document.getElementById('select').addEventListener('change', (e)=>{
 
 
 function changeMode(element) {
-  console.log(element.id);
+  
   mode = element.id;
+  if(mode == 3){
+    document.getElementById('canvas').style.cursor = "crosshair";
+  }
+  else{
+    document.getElementById('canvas').style.cursor = "url('Images/paintbrush.ico')1 30, crosshair";
+  }
 }
 
 function init() {
@@ -98,7 +104,7 @@ function init() {
 
   function DrawLine(p_x, p_y, x, y, c){
     context.beginPath();
-    context.lineWidth = 2;
+    context.lineWidth = size;
     context.strokeStyle = c;
     context.moveTo(p_x, p_y-52);
     context.lineTo(x, y-52);
